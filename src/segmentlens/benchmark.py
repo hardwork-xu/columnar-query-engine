@@ -138,6 +138,14 @@ def run_benchmark(output: str | Path, sizes=(10000, 50000, 200000), repeats=3, o
 def report(path: str | Path) -> str:
     """Render the same table for both READMEs. 为双语README生成同一张表。"""
     data = json.loads(Path(path).read_text())
+    if (not isinstance(data, dict) or data.get('schema_version') != 1
+            or data.get('status') != 'passed' or not data.get('cases')):
+        raise ValueError('only complete successful results can be tabulated / 仅可汇总完整成功结果')
+    for case in data['cases']:
+        trials = case.get('trials', [])
+        if (not trials or {t.get('mode') for t in trials} != {'B', 'C'}
+                or any(t.get('status') != 'passed' or t.get('correct') is not True for t in trials)):
+            raise ValueError('invalid result trials / 结果试次无效')
     lines = ['| Rows / 行数 | Workload / 负载 | B ms | C ms | Fewer evaluated rows / 求值行减少 |', '|---:|---|---:|---:|---:|']
     for c in data['cases']:
         times = {mode: float(np.median([t['seconds'] for t in c['trials'] if t['mode'] == mode])) * 1000 for mode in ('B', 'C')}

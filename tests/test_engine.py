@@ -89,3 +89,11 @@ def test_strict_query_parser_and_numeric_groups():
     for invalid in [{}, {'measure': 'x', 'group_by': 'x', 'oops': True}, {'predicates': [5]}]:
         with pytest.raises(ValueError):
             Query.from_dict(invalid)
+
+
+@pytest.mark.parametrize('header', ['[]', 'null', '1', '{}', '{"format":true,"segment_size":2}', '{"format":1,"segment_size":0}', '{"format":1,"segment_size":2,"unknown":4}'])
+def test_corrupt_archive_headers(tmp_path, header):
+    path = tmp_path / 'corrupt.npz'
+    np.savez(path, __header__=header, x=[1.0])
+    with pytest.raises(ValueError, match='归档'):
+        Table.load(path)

@@ -9,3 +9,4 @@
 - 67dc02f：加入CLI和配对实验程序；CLI/持久化/格式集成检查，30 passed。
 - 运行单线程 `python -m segmentlens bench --output results/benchmark.json --oracle-duckdb`，54条正式试次与原生对照全部通过；有序目标达到，无序负载暴露时间退化。
 - 增加从结果生成的表格、双语设计与复现文档、构建和CI配置。后续构建与远端验证以实际发布检查为准，不从配置存在推断成功。
+- 交叉审查实际复现非法NPZ JSON头导致未捕获AttributeError；加强归档结构校验，增加损坏头和CLI回归测试。报告程序拒绝失败/不完整试次。改动不改变已测成功核心路径；保留实验仍指向原始源码提交。

@@ -5,6 +5,7 @@ from dataclasses import dataclass
 import json
 from pathlib import Path
 import re
+import zipfile
 from types import MappingProxyType
 import numpy as np
 
@@ -105,11 +106,15 @@ class Table:
     @classmethod
     def load(cls, path: str | Path) -> Table:
         """Load and validate complete data, then reconstruct metadata. 全量加载验证后重建元数据。"""
-        with np.load(path, allow_pickle=False) as archive:
-            header = json.loads(str(archive['__header__']))
-            if header.get('format') != 1:
-                raise ValueError('unsupported format / 不支持的格式')
-            return cls({k: archive[k] for k in archive.files if k != '__header__'}, header['segment_size'])
+        try:
+            with np.load(path, allow_pickle=False) as archive:
+                header = json.loads(str(archive['__header__']))
+                if (not isinstance(header, dict) or set(header) != {'format', 'segment_size'}
+                        or type(header['format']) is not int or header['format'] != 1):
+                    raise ValueError('unsupported format / 不支持的格式')
+                return cls({k: archive[k] for k in archive.files if k != '__header__'}, header['segment_size'])
+        except (KeyError, TypeError, AttributeError, ValueError, zipfile.BadZipFile, EOFError) as exc:
+            raise ValueError('invalid table archive / 表归档无效') from exc
 
 
 def _validated(table: Table, query: Query) -> tuple[Predicate, ...]:

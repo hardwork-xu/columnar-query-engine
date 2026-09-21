@@ -49,3 +49,18 @@ def test_recorded_results_schema_if_present():
         assert r['source']['commit'] and not r['source']['dirty']
         assert len(r['cases']) == 9
         assert all(t['correct'] for c in r['cases'] for t in c['trials'])
+
+
+def test_failed_report_and_invalid_archive_cli(tmp_path):
+    import numpy as np
+    path = tmp_path / 'failed.json'
+    path.write_text(json.dumps({'schema_version': 1, 'status': 'failed', 'cases': []}))
+    with pytest.raises(ValueError):
+        report(path)
+    archive = tmp_path / 'invalid.npz'
+    np.savez(archive, __header__='[]', x=[1.0])
+    query = tmp_path / 'query.json'
+    query.write_text('{"measure":"x", "group_by":"x"}')
+    p = subprocess.run([sys.executable, '-m', 'segmentlens', 'query', str(archive), str(query)], text=True, capture_output=True)
+    assert p.returncode == 2
+    assert 'Traceback' not in p.stderr and '归档' in p.stderr
