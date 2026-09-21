@@ -73,6 +73,19 @@ class Table:
         self._columns = owned
         self.segment_size = segment_size
         self.length = length
+        # Summaries may over-admit, but must never reject a matching row.
+        # 摘要可放过不匹配段，但绝不能拒绝真正匹配的行。
+        self._summaries = []
+        for start in range(0, self.length, segment_size):
+            summary = {}
+            for name, column in owned.items():
+                part = column[start:start + segment_size]
+                if column.dtype.kind == 'f':
+                    summary[name] = (float(part.min()), float(part.max()))
+                else:
+                    values = np.unique(part)
+                    summary[name] = frozenset(values.tolist()) if len(values) <= 256 else None
+            self._summaries.append(summary)
 
     @property
     def columns(self):
@@ -150,16 +163,44 @@ def _mask(a: np.ndarray, p: Predicate) -> np.ndarray:
     return np.isin(a, p.value)
 
 
-def execute(table: Table, query: Query, *, prune: bool = False) -> Result:
+def _possible(summary, p: Predicate) -> bool:
+    """Conservative may-match predicate. 保守判断是否可能匹配。"""
+    if p.op == 'in' and not p.value:
+        return False
+    if summary is None:
+        return True
+    if isinstance(summary, frozenset):
+        return p.value in summary if p.op == 'eq' else not summary.isdisjoint(p.value)
+    lo, hi = summary
+    if p.op == 'eq':
+        return lo <= p.value <= hi
+    if p.op == 'lt':
+        return lo < p.value
+    if p.op == 'le':
+        return lo <= p.value
+    if p.op == 'gt':
+        return hi > p.value
+    if p.op == 'ge':
+        return hi >= p.value
+    if p.op == 'between':
+        return hi >= p.value[0] and lo <= p.value[1]
+    return any(lo <= value <= hi for value in p.value)
+
+
+def execute(table: Table, query: Query, *, prune: bool = True) -> Result:
     """Run selection vectors then grouped aggregation. 先计算选择向量，再执行分组聚合。"""
-    if prune:
-        raise ValueError('pruning not implemented in baseline / 基线不支持剪枝')
+    if not isinstance(prune, bool):
+        raise ValueError('prune must be boolean / prune必须是布尔值')
     predicates = _validated(table, query)
     stats = {'segments_total': 0, 'segments_pruned': 0, 'rows_evaluated': 0, 'rows_matched': 0}
     groups = {}
     for start in range(0, table.length, table.segment_size):
         end = min(start + table.segment_size, table.length)
         stats['segments_total'] += 1
+        summary = table._summaries[start // table.segment_size]
+        if prune and any(not _possible(summary[p.column], p) for p in predicates):
+            stats['segments_pruned'] += 1
+            continue
         stats['rows_evaluated'] += end - start
         selected = np.ones(end - start, dtype=bool)
         for p in predicates:
@@ -176,5 +217,7 @@ def execute(table: Table, query: Query, *, prune: bool = False) -> Result:
             previous = groups.setdefault(key, [0, 0.0])
             previous[0] += int(count)
             previous[1] += float(total)
+            if not np.isfinite(previous[1]):
+                raise ValueError('aggregate overflow / 聚合溢出')
     rows = [{'key': key, 'count': groups[key][0], 'sum': groups[key][1]} for key in sorted(groups)]
     return Result(rows, stats)
