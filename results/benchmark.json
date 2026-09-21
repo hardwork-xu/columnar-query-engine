@@ -1,0 +1,1141 @@
+{
+  "schema_version": 1,
+  "run_id": "segmentlens-bec82c0d6994",
+  "started_at": "2026-09-21T14:30:36.491895+00:00",
+  "command": "python -m segmentlens bench --output results/benchmark.json --oracle-duckdb",
+  "source": {
+    "commit": "67dc02f2f459f77e92a80911ebe5704098ce4e7a",
+    "dirty": false,
+    "package_sha256": "31ce5898ee1c85e24dd78b7f34fe274a541efdae45025024fcdb91cb065dde71"
+  },
+  "environment": {
+    "os": "Darwin",
+    "os_release": "25.6.0",
+    "machine": "arm64",
+    "python": "3.12.2",
+    "numpy": "2.3.3",
+    "cpu_count": 10,
+    "threads": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1"
+    }
+  },
+  "config": {
+    "sizes": [
+      10000,
+      50000,
+      200000
+    ],
+    "repeats": 3,
+    "warmups_per_mode": 1,
+    "segment_size": 512,
+    "seed": 20260921,
+    "sum_rtol": 1e-10,
+    "sum_atol": 1e-10,
+    "target_row_reduction": 0.8,
+    "data": "synthetic",
+    "timing": "query only; includes validation, filtering, aggregation",
+    "primary_metric": "rows_evaluated; not disk bytes or RSS"
+  },
+  "upstream_A": {
+    "status": "passed",
+    "package": "duckdb",
+    "version": "1.4.0",
+    "scope": "correctness only, separate release from source-study SHA"
+  },
+  "cases": [
+    {
+      "n": 10000,
+      "workload": "ordered_selective",
+      "query": {
+        "lo": 4500.0,
+        "hi_exclusive": 4600.0
+      },
+      "data_sha256": "4fb8b9ddebf303563dd6de733d2c517f513d76200994af54abe54b20b055d54d",
+      "ingestion": {
+        "build_seconds": 0.006138707976788282,
+        "save_seconds": 0.000731457956135273,
+        "load_seconds": 0.001956458087079227,
+        "archive_bytes": 361132
+      },
+      "reference_rows": [
+        {
+          "key": "alpha",
+          "count": 29,
+          "sum": 3.3082798223400545
+        },
+        {
+          "key": "beta",
+          "count": 17,
+          "sum": 3.447979088681748
+        },
+        {
+          "key": "delta",
+          "count": 33,
+          "sum": 9.55238903257799
+        },
+        {
+          "key": "gamma",
+          "count": 21,
+          "sum": 1.532845861121822
+        }
+      ],
+      "upstream_A_equal": true,
+      "trials": [
+        {
+          "repeat": 0,
+          "mode": "B",
+          "seconds": 0.00023912498727440834,
+          "stats": {
+            "segments_total": 20,
+            "segments_pruned": 0,
+            "rows_evaluated": 10000,
+            "rows_matched": 100
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 0,
+          "mode": "C",
+          "seconds": 5.079200491309166e-05,
+          "stats": {
+            "segments_total": 20,
+            "segments_pruned": 19,
+            "rows_evaluated": 512,
+            "rows_matched": 100
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 1,
+          "mode": "C",
+          "seconds": 4.595902282744646e-05,
+          "stats": {
+            "segments_total": 20,
+            "segments_pruned": 19,
+            "rows_evaluated": 512,
+            "rows_matched": 100
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 1,
+          "mode": "B",
+          "seconds": 0.00023079104721546173,
+          "stats": {
+            "segments_total": 20,
+            "segments_pruned": 0,
+            "rows_evaluated": 10000,
+            "rows_matched": 100
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 2,
+          "mode": "B",
+          "seconds": 0.00022416701540350914,
+          "stats": {
+            "segments_total": 20,
+            "segments_pruned": 0,
+            "rows_evaluated": 10000,
+            "rows_matched": 100
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 2,
+          "mode": "C",
+          "seconds": 4.4042011722922325e-05,
+          "stats": {
+            "segments_total": 20,
+            "segments_pruned": 19,
+            "rows_evaluated": 512,
+            "rows_matched": 100
+          },
+          "correct": true,
+          "status": "passed"
+        }
+      ],
+      "row_reduction": 0.9488,
+      "target_applicable": true,
+      "target_met": true
+    },
+    {
+      "n": 10000,
+      "workload": "shuffled_selective",
+      "query": {
+        "lo": 4500.0,
+        "hi_exclusive": 4600.0
+      },
+      "data_sha256": "d800051b2af23311248926793ed35f0acf6690aec4d1e4f8ed3312612805fc9f",
+      "ingestion": {
+        "build_seconds": 0.0006969579262658954,
+        "save_seconds": 0.0006192920263856649,
+        "load_seconds": 0.002037000027485192,
+        "archive_bytes": 361132
+      },
+      "reference_rows": [
+        {
+          "key": "alpha",
+          "count": 29,
+          "sum": -4.451080348902206
+        },
+        {
+          "key": "beta",
+          "count": 19,
+          "sum": -6.297422392962352
+        },
+        {
+          "key": "delta",
+          "count": 25,
+          "sum": 1.3150704786240133
+        },
+        {
+          "key": "gamma",
+          "count": 27,
+          "sum": -1.1421884953162351
+        }
+      ],
+      "upstream_A_equal": true,
+      "trials": [
+        {
+          "repeat": 0,
+          "mode": "B",
+          "seconds": 0.000310625066049397,
+          "stats": {
+            "segments_total": 20,
+            "segments_pruned": 0,
+            "rows_evaluated": 10000,
+            "rows_matched": 100
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 0,
+          "mode": "C",
+          "seconds": 0.0003244580002501607,
+          "stats": {
+            "segments_total": 20,
+            "segments_pruned": 0,
+            "rows_evaluated": 10000,
+            "rows_matched": 100
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 1,
+          "mode": "C",
+          "seconds": 0.00031875004060566425,
+          "stats": {
+            "segments_total": 20,
+            "segments_pruned": 0,
+            "rows_evaluated": 10000,
+            "rows_matched": 100
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 1,
+          "mode": "B",
+          "seconds": 0.0003029590006917715,
+          "stats": {
+            "segments_total": 20,
+            "segments_pruned": 0,
+            "rows_evaluated": 10000,
+            "rows_matched": 100
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 2,
+          "mode": "B",
+          "seconds": 0.0003023749450221658,
+          "stats": {
+            "segments_total": 20,
+            "segments_pruned": 0,
+            "rows_evaluated": 10000,
+            "rows_matched": 100
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 2,
+          "mode": "C",
+          "seconds": 0.00031849998049438,
+          "stats": {
+            "segments_total": 20,
+            "segments_pruned": 0,
+            "rows_evaluated": 10000,
+            "rows_matched": 100
+          },
+          "correct": true,
+          "status": "passed"
+        }
+      ],
+      "row_reduction": 0.0,
+      "target_applicable": false,
+      "target_met": null
+    },
+    {
+      "n": 10000,
+      "workload": "ordered_all",
+      "query": {
+        "lo": 0.0,
+        "hi_exclusive": 10000.0
+      },
+      "data_sha256": "4fb8b9ddebf303563dd6de733d2c517f513d76200994af54abe54b20b055d54d",
+      "ingestion": {
+        "build_seconds": 0.0006148340180516243,
+        "save_seconds": 0.0006795419612899423,
+        "load_seconds": 0.0016825420316308737,
+        "archive_bytes": 361132
+      },
+      "reference_rows": [
+        {
+          "key": "alpha",
+          "count": 2488,
+          "sum": 33.00884443449672
+        },
+        {
+          "key": "beta",
+          "count": 2477,
+          "sum": 15.834859571819862
+        },
+        {
+          "key": "delta",
+          "count": 2474,
+          "sum": -27.983219389705358
+        },
+        {
+          "key": "gamma",
+          "count": 2561,
+          "sum": -7.189942383395396
+        }
+      ],
+      "upstream_A_equal": true,
+      "trials": [
+        {
+          "repeat": 0,
+          "mode": "B",
+          "seconds": 0.0009468750795349479,
+          "stats": {
+            "segments_total": 20,
+            "segments_pruned": 0,
+            "rows_evaluated": 10000,
+            "rows_matched": 10000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 0,
+          "mode": "C",
+          "seconds": 0.0010471660643815994,
+          "stats": {
+            "segments_total": 20,
+            "segments_pruned": 0,
+            "rows_evaluated": 10000,
+            "rows_matched": 10000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 1,
+          "mode": "C",
+          "seconds": 0.0010857919696718454,
+          "stats": {
+            "segments_total": 20,
+            "segments_pruned": 0,
+            "rows_evaluated": 10000,
+            "rows_matched": 10000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 1,
+          "mode": "B",
+          "seconds": 0.0011476250365376472,
+          "stats": {
+            "segments_total": 20,
+            "segments_pruned": 0,
+            "rows_evaluated": 10000,
+            "rows_matched": 10000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 2,
+          "mode": "B",
+          "seconds": 0.0013455000007525086,
+          "stats": {
+            "segments_total": 20,
+            "segments_pruned": 0,
+            "rows_evaluated": 10000,
+            "rows_matched": 10000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 2,
+          "mode": "C",
+          "seconds": 0.0009565419750288129,
+          "stats": {
+            "segments_total": 20,
+            "segments_pruned": 0,
+            "rows_evaluated": 10000,
+            "rows_matched": 10000
+          },
+          "correct": true,
+          "status": "passed"
+        }
+      ],
+      "row_reduction": 0.0,
+      "target_applicable": false,
+      "target_met": null
+    },
+    {
+      "n": 50000,
+      "workload": "ordered_selective",
+      "query": {
+        "lo": 22500.0,
+        "hi_exclusive": 23000.0
+      },
+      "data_sha256": "00c79fac654760e0ca478249d848eb7981cb63422510f18cc09dd19fefece439",
+      "ingestion": {
+        "build_seconds": 0.0030300000216811895,
+        "save_seconds": 0.001216250006109476,
+        "load_seconds": 0.004017208004370332,
+        "archive_bytes": 1801132
+      },
+      "reference_rows": [
+        {
+          "key": "alpha",
+          "count": 123,
+          "sum": 0.34338627633150876
+        },
+        {
+          "key": "beta",
+          "count": 136,
+          "sum": 4.827957158577708
+        },
+        {
+          "key": "delta",
+          "count": 124,
+          "sum": 8.438158761847617
+        },
+        {
+          "key": "gamma",
+          "count": 117,
+          "sum": 2.1275440334928324
+        }
+      ],
+      "upstream_A_equal": true,
+      "trials": [
+        {
+          "repeat": 0,
+          "mode": "B",
+          "seconds": 0.0011218750150874257,
+          "stats": {
+            "segments_total": 98,
+            "segments_pruned": 0,
+            "rows_evaluated": 50000,
+            "rows_matched": 500
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 0,
+          "mode": "C",
+          "seconds": 0.00015595799777656794,
+          "stats": {
+            "segments_total": 98,
+            "segments_pruned": 96,
+            "rows_evaluated": 1024,
+            "rows_matched": 500
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 1,
+          "mode": "C",
+          "seconds": 0.00014870904851704836,
+          "stats": {
+            "segments_total": 98,
+            "segments_pruned": 96,
+            "rows_evaluated": 1024,
+            "rows_matched": 500
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 1,
+          "mode": "B",
+          "seconds": 0.001131374971009791,
+          "stats": {
+            "segments_total": 98,
+            "segments_pruned": 0,
+            "rows_evaluated": 50000,
+            "rows_matched": 500
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 2,
+          "mode": "B",
+          "seconds": 0.001128166913986206,
+          "stats": {
+            "segments_total": 98,
+            "segments_pruned": 0,
+            "rows_evaluated": 50000,
+            "rows_matched": 500
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 2,
+          "mode": "C",
+          "seconds": 0.0001633339561522007,
+          "stats": {
+            "segments_total": 98,
+            "segments_pruned": 96,
+            "rows_evaluated": 1024,
+            "rows_matched": 500
+          },
+          "correct": true,
+          "status": "passed"
+        }
+      ],
+      "row_reduction": 0.97952,
+      "target_applicable": true,
+      "target_met": true
+    },
+    {
+      "n": 50000,
+      "workload": "shuffled_selective",
+      "query": {
+        "lo": 22500.0,
+        "hi_exclusive": 23000.0
+      },
+      "data_sha256": "9dedae254260b3fd13f124d8b0b9d785bf8ff185e81b0858d9af69d160879b45",
+      "ingestion": {
+        "build_seconds": 0.0033732090378180146,
+        "save_seconds": 0.0012285839766263962,
+        "load_seconds": 0.005079125054180622,
+        "archive_bytes": 1801132
+      },
+      "reference_rows": [
+        {
+          "key": "alpha",
+          "count": 119,
+          "sum": 16.312893532450303
+        },
+        {
+          "key": "beta",
+          "count": 136,
+          "sum": 6.291661409826105
+        },
+        {
+          "key": "delta",
+          "count": 130,
+          "sum": -1.9334637831972874
+        },
+        {
+          "key": "gamma",
+          "count": 115,
+          "sum": 7.918593868996284
+        }
+      ],
+      "upstream_A_equal": true,
+      "trials": [
+        {
+          "repeat": 0,
+          "mode": "B",
+          "seconds": 0.0014906249707564712,
+          "stats": {
+            "segments_total": 98,
+            "segments_pruned": 0,
+            "rows_evaluated": 50000,
+            "rows_matched": 500
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 0,
+          "mode": "C",
+          "seconds": 0.001529625034891069,
+          "stats": {
+            "segments_total": 98,
+            "segments_pruned": 0,
+            "rows_evaluated": 50000,
+            "rows_matched": 500
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 1,
+          "mode": "C",
+          "seconds": 0.0019497909815981984,
+          "stats": {
+            "segments_total": 98,
+            "segments_pruned": 0,
+            "rows_evaluated": 50000,
+            "rows_matched": 500
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 1,
+          "mode": "B",
+          "seconds": 0.0018814170034602284,
+          "stats": {
+            "segments_total": 98,
+            "segments_pruned": 0,
+            "rows_evaluated": 50000,
+            "rows_matched": 500
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 2,
+          "mode": "B",
+          "seconds": 0.0014723329804837704,
+          "stats": {
+            "segments_total": 98,
+            "segments_pruned": 0,
+            "rows_evaluated": 50000,
+            "rows_matched": 500
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 2,
+          "mode": "C",
+          "seconds": 0.0015318338992074132,
+          "stats": {
+            "segments_total": 98,
+            "segments_pruned": 0,
+            "rows_evaluated": 50000,
+            "rows_matched": 500
+          },
+          "correct": true,
+          "status": "passed"
+        }
+      ],
+      "row_reduction": 0.0,
+      "target_applicable": false,
+      "target_met": null
+    },
+    {
+      "n": 50000,
+      "workload": "ordered_all",
+      "query": {
+        "lo": 0.0,
+        "hi_exclusive": 50000.0
+      },
+      "data_sha256": "00c79fac654760e0ca478249d848eb7981cb63422510f18cc09dd19fefece439",
+      "ingestion": {
+        "build_seconds": 0.0034587079426273704,
+        "save_seconds": 0.0013369170483201742,
+        "load_seconds": 0.00486408406868577,
+        "archive_bytes": 1801132
+      },
+      "reference_rows": [
+        {
+          "key": "alpha",
+          "count": 12366,
+          "sum": -84.14414561486954
+        },
+        {
+          "key": "beta",
+          "count": 12669,
+          "sum": 84.62850357669438
+        },
+        {
+          "key": "delta",
+          "count": 12487,
+          "sum": -29.95523072207569
+        },
+        {
+          "key": "gamma",
+          "count": 12478,
+          "sum": 146.74581227445316
+        }
+      ],
+      "upstream_A_equal": true,
+      "trials": [
+        {
+          "repeat": 0,
+          "mode": "B",
+          "seconds": 0.005443917005322874,
+          "stats": {
+            "segments_total": 98,
+            "segments_pruned": 0,
+            "rows_evaluated": 50000,
+            "rows_matched": 50000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 0,
+          "mode": "C",
+          "seconds": 0.005290167056955397,
+          "stats": {
+            "segments_total": 98,
+            "segments_pruned": 0,
+            "rows_evaluated": 50000,
+            "rows_matched": 50000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 1,
+          "mode": "C",
+          "seconds": 0.005336167057976127,
+          "stats": {
+            "segments_total": 98,
+            "segments_pruned": 0,
+            "rows_evaluated": 50000,
+            "rows_matched": 50000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 1,
+          "mode": "B",
+          "seconds": 0.004504041979089379,
+          "stats": {
+            "segments_total": 98,
+            "segments_pruned": 0,
+            "rows_evaluated": 50000,
+            "rows_matched": 50000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 2,
+          "mode": "B",
+          "seconds": 0.00529170804657042,
+          "stats": {
+            "segments_total": 98,
+            "segments_pruned": 0,
+            "rows_evaluated": 50000,
+            "rows_matched": 50000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 2,
+          "mode": "C",
+          "seconds": 0.004994083079509437,
+          "stats": {
+            "segments_total": 98,
+            "segments_pruned": 0,
+            "rows_evaluated": 50000,
+            "rows_matched": 50000
+          },
+          "correct": true,
+          "status": "passed"
+        }
+      ],
+      "row_reduction": 0.0,
+      "target_applicable": false,
+      "target_met": null
+    },
+    {
+      "n": 200000,
+      "workload": "ordered_selective",
+      "query": {
+        "lo": 90000.0,
+        "hi_exclusive": 92000.0
+      },
+      "data_sha256": "9f238b4e4795fec913360b3abe9be4e47f8d35f2851819e8ce861f7e96624ac3",
+      "ingestion": {
+        "build_seconds": 0.01461900002323091,
+        "save_seconds": 0.0061761250253766775,
+        "load_seconds": 0.01741962495725602,
+        "archive_bytes": 7201132
+      },
+      "reference_rows": [
+        {
+          "key": "alpha",
+          "count": 498,
+          "sum": -5.016588353390395
+        },
+        {
+          "key": "beta",
+          "count": 494,
+          "sum": -22.923232436105966
+        },
+        {
+          "key": "delta",
+          "count": 516,
+          "sum": 8.63362091570176
+        },
+        {
+          "key": "gamma",
+          "count": 492,
+          "sum": -31.284627369839445
+        }
+      ],
+      "upstream_A_equal": true,
+      "trials": [
+        {
+          "repeat": 0,
+          "mode": "B",
+          "seconds": 0.005332708009518683,
+          "stats": {
+            "segments_total": 391,
+            "segments_pruned": 0,
+            "rows_evaluated": 200000,
+            "rows_matched": 2000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 0,
+          "mode": "C",
+          "seconds": 0.0005429589655250311,
+          "stats": {
+            "segments_total": 391,
+            "segments_pruned": 386,
+            "rows_evaluated": 2560,
+            "rows_matched": 2000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 1,
+          "mode": "C",
+          "seconds": 0.0007152499165385962,
+          "stats": {
+            "segments_total": 391,
+            "segments_pruned": 386,
+            "rows_evaluated": 2560,
+            "rows_matched": 2000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 1,
+          "mode": "B",
+          "seconds": 0.0048976249527186155,
+          "stats": {
+            "segments_total": 391,
+            "segments_pruned": 0,
+            "rows_evaluated": 200000,
+            "rows_matched": 2000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 2,
+          "mode": "B",
+          "seconds": 0.005329374922439456,
+          "stats": {
+            "segments_total": 391,
+            "segments_pruned": 0,
+            "rows_evaluated": 200000,
+            "rows_matched": 2000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 2,
+          "mode": "C",
+          "seconds": 0.0005947919562458992,
+          "stats": {
+            "segments_total": 391,
+            "segments_pruned": 386,
+            "rows_evaluated": 2560,
+            "rows_matched": 2000
+          },
+          "correct": true,
+          "status": "passed"
+        }
+      ],
+      "row_reduction": 0.9872,
+      "target_applicable": true,
+      "target_met": true
+    },
+    {
+      "n": 200000,
+      "workload": "shuffled_selective",
+      "query": {
+        "lo": 90000.0,
+        "hi_exclusive": 92000.0
+      },
+      "data_sha256": "2b5fdfb4399bb5e1942adeccd9f146e318cd32b88eab7fd6441f22de4b7d91c4",
+      "ingestion": {
+        "build_seconds": 0.013604291947558522,
+        "save_seconds": 0.004578916006721556,
+        "load_seconds": 0.01785349997226149,
+        "archive_bytes": 7201132
+      },
+      "reference_rows": [
+        {
+          "key": "alpha",
+          "count": 490,
+          "sum": 15.788831014834814
+        },
+        {
+          "key": "beta",
+          "count": 485,
+          "sum": 31.112529177117707
+        },
+        {
+          "key": "delta",
+          "count": 533,
+          "sum": -7.215020182861366
+        },
+        {
+          "key": "gamma",
+          "count": 492,
+          "sum": -16.8459039042122
+        }
+      ],
+      "upstream_A_equal": true,
+      "trials": [
+        {
+          "repeat": 0,
+          "mode": "B",
+          "seconds": 0.006604791036807001,
+          "stats": {
+            "segments_total": 391,
+            "segments_pruned": 0,
+            "rows_evaluated": 200000,
+            "rows_matched": 2000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 0,
+          "mode": "C",
+          "seconds": 0.007174582919105887,
+          "stats": {
+            "segments_total": 391,
+            "segments_pruned": 0,
+            "rows_evaluated": 200000,
+            "rows_matched": 2000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 1,
+          "mode": "C",
+          "seconds": 0.006932875025086105,
+          "stats": {
+            "segments_total": 391,
+            "segments_pruned": 0,
+            "rows_evaluated": 200000,
+            "rows_matched": 2000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 1,
+          "mode": "B",
+          "seconds": 0.006668124930001795,
+          "stats": {
+            "segments_total": 391,
+            "segments_pruned": 0,
+            "rows_evaluated": 200000,
+            "rows_matched": 2000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 2,
+          "mode": "B",
+          "seconds": 0.006457249983213842,
+          "stats": {
+            "segments_total": 391,
+            "segments_pruned": 0,
+            "rows_evaluated": 200000,
+            "rows_matched": 2000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 2,
+          "mode": "C",
+          "seconds": 0.0066561250714585185,
+          "stats": {
+            "segments_total": 391,
+            "segments_pruned": 0,
+            "rows_evaluated": 200000,
+            "rows_matched": 2000
+          },
+          "correct": true,
+          "status": "passed"
+        }
+      ],
+      "row_reduction": 0.0,
+      "target_applicable": false,
+      "target_met": null
+    },
+    {
+      "n": 200000,
+      "workload": "ordered_all",
+      "query": {
+        "lo": 0.0,
+        "hi_exclusive": 200000.0
+      },
+      "data_sha256": "9f238b4e4795fec913360b3abe9be4e47f8d35f2851819e8ce861f7e96624ac3",
+      "ingestion": {
+        "build_seconds": 0.013748083030804992,
+        "save_seconds": 0.004258583998307586,
+        "load_seconds": 0.020221458980813622,
+        "archive_bytes": 7201132
+      },
+      "reference_rows": [
+        {
+          "key": "alpha",
+          "count": 49860,
+          "sum": 24.29525077728841
+        },
+        {
+          "key": "beta",
+          "count": 50009,
+          "sum": 272.78158175836205
+        },
+        {
+          "key": "delta",
+          "count": 50111,
+          "sum": 314.69153281233827
+        },
+        {
+          "key": "gamma",
+          "count": 50020,
+          "sum": 428.1572581004443
+        }
+      ],
+      "upstream_A_equal": true,
+      "trials": [
+        {
+          "repeat": 0,
+          "mode": "B",
+          "seconds": 0.024115124950185418,
+          "stats": {
+            "segments_total": 391,
+            "segments_pruned": 0,
+            "rows_evaluated": 200000,
+            "rows_matched": 200000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 0,
+          "mode": "C",
+          "seconds": 0.02267908293288201,
+          "stats": {
+            "segments_total": 391,
+            "segments_pruned": 0,
+            "rows_evaluated": 200000,
+            "rows_matched": 200000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 1,
+          "mode": "C",
+          "seconds": 0.021165208076126873,
+          "stats": {
+            "segments_total": 391,
+            "segments_pruned": 0,
+            "rows_evaluated": 200000,
+            "rows_matched": 200000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 1,
+          "mode": "B",
+          "seconds": 0.021454541012644768,
+          "stats": {
+            "segments_total": 391,
+            "segments_pruned": 0,
+            "rows_evaluated": 200000,
+            "rows_matched": 200000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 2,
+          "mode": "B",
+          "seconds": 0.02079858398064971,
+          "stats": {
+            "segments_total": 391,
+            "segments_pruned": 0,
+            "rows_evaluated": 200000,
+            "rows_matched": 200000
+          },
+          "correct": true,
+          "status": "passed"
+        },
+        {
+          "repeat": 2,
+          "mode": "C",
+          "seconds": 0.02062979096081108,
+          "stats": {
+            "segments_total": 391,
+            "segments_pruned": 0,
+            "rows_evaluated": 200000,
+            "rows_matched": 200000
+          },
+          "correct": true,
+          "status": "passed"
+        }
+      ],
+      "row_reduction": 0.0,
+      "target_applicable": false,
+      "target_met": null
+    }
+  ],
+  "status": "passed",
+  "failures": [],
+  "finished_at": "2026-09-21T14:30:37.576475+00:00"
+}

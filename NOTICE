@@ -1,0 +1,6 @@
+SegmentLens is an unofficial independent implementation of a small columnar
+query subsystem inspired by DuckDB. DuckDB architecture and algorithms remain
+attributed to their upstream authors. No DuckDB source code is redistributed.
+See THIRD_PARTY.md for provenance and dependency licensing.
+
+SegmentLens为非官方独立子系统实现；上游架构和成熟算法归属原作者。

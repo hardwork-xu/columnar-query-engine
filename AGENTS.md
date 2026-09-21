@@ -1,0 +1,3 @@
+# Maintenance conventions
+
+Keep core execution independent of upstream DuckDB. Preserve conservative-pruning invariants and independent reference tests. Never silently weaken numeric tolerances. Keep English/Chinese documents and generated result tables aligned. Declare workload/targets before measurement and preserve raw negative results. Do not claim timing superiority without a comparable upstream run. Keep dependency versions and source attribution explicit. Do not commit environment secrets, private datasets or absolute personal paths. Run test, lint, build and public-content review before release.
