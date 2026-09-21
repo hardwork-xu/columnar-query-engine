@@ -1,0 +1,6 @@
+include README_zh.md NOTICE THIRD_PARTY.md CONTRIBUTING.md CONTRIBUTING_zh.md
+include SECURITY.md CHANGELOG.md AGENTS.md CITATION.cff Makefile Dockerfile .dockerignore requirements-dev.txt
+recursive-include docs *.md *.json
+recursive-include results *.json
+exclude results/local*.json
+recursive-include tests *.py
