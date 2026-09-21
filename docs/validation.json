@@ -1,0 +1,19 @@
+{
+  "checked_at": "2026-09-21",
+  "timezone": "Asia/Shanghai",
+  "source_commit": "c9d3614",
+  "local": {
+    "tests": {
+      "passed": 38,
+      "failed": 0,
+      "skipped": 0
+    },
+    "lint": "passed",
+    "wheel": "passed",
+    "sdist": "passed",
+    "fresh_wheel_install_and_demo": "passed",
+    "docker": "not_run: executable unavailable"
+  },
+  "remote_ci": "not_run at this record; inspect GitHub Actions for current state",
+  "benchmark": "segmentlens-bec82c0d6994"
+}
