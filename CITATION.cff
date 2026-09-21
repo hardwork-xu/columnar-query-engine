@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "Please cite this software when using its implementation or experiments."
-title: "SegmentLens: conservative pruning in a small columnar query engine"
+title: "Columnar Query Engine (segmentlens)"
 type: software
 authors:
   - family-names: Xu
@@ -8,4 +8,4 @@ authors:
 version: 0.1.0
 date-released: 2026-09-21
 license: MIT
-repository-code: "https://github.com/hardwork-xu/segmentlens"
+repository-code: "https://github.com/hardwork-xu/columnar-query-engine"

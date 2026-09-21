@@ -1,4 +1,6 @@
-# SegmentLens
+# Columnar Query Engine
+
+Previously `segmentlens`. Package and command names remain unchanged (`segmentlens`).
 
 [简体中文](README_zh.md)
 
@@ -19,7 +21,7 @@ flowchart LR
 
 ## Install and run
 
-Clone [this repository](https://github.com/hardwork-xu/segmentlens), then run from its root. Python3.11+, NumPy2.3.3; macOS arm64 locally validated, Linux CPU covered by the actual CI job. No keys or model downloads.
+Clone [this repository](https://github.com/hardwork-xu/columnar-query-engine), then run from its root. Python3.11+, NumPy2.3.3; macOS arm64 locally validated, Linux CPU covered by the actual CI job. No keys or model downloads.
 
 ```sh
 python3 -m venv .venv
@@ -68,6 +70,6 @@ Unordered data prunes nothing and is slower with C in these trials. Evaluated ro
 
 [UPSTREAM_ANALYSIS](docs/en/UPSTREAM_ANALYSIS.md) · [REPRODUCTION](docs/en/REPRODUCTION.md) · [DESIGN](docs/en/DESIGN.md) · [IMPROVEMENTS](docs/en/IMPROVEMENTS.md) · [EXPERIMENTS](docs/en/EXPERIMENTS.md) · [DEVELOPMENT_LOG](docs/en/DEVELOPMENT_LOG.md) · [WALKTHROUGH](docs/en/WALKTHROUGH.md) · [LIMITATIONS](docs/en/LIMITATIONS.md)
 
-`make test`, `make demo`, `make bench`, `make report`, `make build` provide common entry points. `docker build -t segmentlens .` and `docker run --rm segmentlens` run the CPU demo. Docker was unavailable locally; consult the [real CI runs](https://github.com/hardwork-xu/segmentlens/actions/workflows/ci.yml) for container status.
+`make test`, `make demo`, `make bench`, `make report`, `make build` provide common entry points. `docker build -t segmentlens .` and `docker run --rm segmentlens` run the CPU demo. Docker was unavailable locally; consult the [real CI runs](https://github.com/hardwork-xu/columnar-query-engine/actions/workflows/ci.yml) for container status.
 
 MIT for independently authored code. [Third-party attribution](THIRD_PARTY.md), [NOTICE](NOTICE), [contribution guide](CONTRIBUTING.md), [security](SECURITY.md), [release notes](CHANGELOG.md). Cite the software metadata in [CITATION.cff](CITATION.cff); credit [DuckDB](https://github.com/duckdb/duckdb) for the upstream architecture and established mechanisms.

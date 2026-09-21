@@ -1,4 +1,6 @@
-# SegmentLens
+# 列式查询引擎 · Columnar Query Engine
+
+仓库原名 `segmentlens`；包名及现有命令保持不变（`segmentlens`）。
 
 [English](README.md)
 
@@ -19,7 +21,7 @@ flowchart LR
 
 ## 安装与运行
 
-克隆[本仓库](https://github.com/hardwork-xu/segmentlens)，在仓库根目录运行。要求Python3.11+、NumPy2.3.3；本地验证macOS arm64，Linux CPU以实际CI为准。无需密钥或模型下载。
+克隆[本仓库](https://github.com/hardwork-xu/columnar-query-engine)，在仓库根目录运行。要求Python3.11+、NumPy2.3.3；本地验证macOS arm64，Linux CPU以实际CI为准。无需密钥或模型下载。
 
 ```sh
 python3 -m venv .venv
@@ -68,6 +70,6 @@ CLI帮助为双语。`query TABLE.npz QUERY.json --no-prune`使用完整扫描B�
 
 [UPSTREAM_ANALYSIS](docs/zh/UPSTREAM_ANALYSIS.md) · [REPRODUCTION](docs/zh/REPRODUCTION.md) · [DESIGN](docs/zh/DESIGN.md) · [IMPROVEMENTS](docs/zh/IMPROVEMENTS.md) · [EXPERIMENTS](docs/zh/EXPERIMENTS.md) · [DEVELOPMENT_LOG](docs/zh/DEVELOPMENT_LOG.md) · [WALKTHROUGH](docs/zh/WALKTHROUGH.md) · [LIMITATIONS](docs/zh/LIMITATIONS.md)
 
-统一入口：make test/demo/bench/report/build。`docker build -t segmentlens .`、`docker run --rm segmentlens`运行CPU示例。宿主机无Docker，容器状态请检查[真实CI](https://github.com/hardwork-xu/segmentlens/actions/workflows/ci.yml)。
+统一入口：make test/demo/bench/report/build。`docker build -t segmentlens .`、`docker run --rm segmentlens`运行CPU示例。宿主机无Docker，容器状态请检查[真实CI](https://github.com/hardwork-xu/columnar-query-engine/actions/workflows/ci.yml)。
 
 自主代码采用MIT。[第三方归属](THIRD_PARTY.md)、[NOTICE](NOTICE)、[贡献指南](CONTRIBUTING_zh.md)、[安全说明](SECURITY.md)、[版本说明](CHANGELOG.md)。引用元数据见[CITATION.cff](CITATION.cff)，上游架构及成熟机制应归属[DuckDB](https://github.com/duckdb/duckdb)。
