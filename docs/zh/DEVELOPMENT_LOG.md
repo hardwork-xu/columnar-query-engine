@@ -16,4 +16,11 @@
 - 重现公开 `segment_size` 重新赋值反例：只改布局后，全扫返回 count 2 / sum 201，剪枝却无结果。这是不支持的重配置被静默接受，不是正常不可变表查询失败。
 - 将可写的 `segment_size` / `length` 改为私有字段支撑的只读属性，新增赋值/删除拒绝、查询守恒、保存加载与显式重建回归。
 - 将实验最终覆盖写入改为排他创建，预先拒绝悬空符号链接，测试已有/竞态目标及失败运行记录保留。
-- `python -m pytest -q`：52 passed，含14项新增用例；未放宽容差。没有运行正式性能实验，旧原始结果未改且明确标为历史证据。
+- `python -m pytest -q`：52 passed，含14项新增用例；未放宽容差。此初始修复检查点尚未运行正式性能实验，旧原始结果未改且明确标为历史证据；同日后续运行记录如下。
+
+
+## 2026-10-13 — 修复源码实测
+
+- 在干净提交 `00c50b3c9413f2894909bcf2d8fa9ff2863492f6` 运行 `OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 python -m segmentlens bench --output results/layout-repair-20261013.json --oracle-duckdb`。运行 `segmentlens-f0eea47a2116` 正常退出：9个案例/54条试次、三个有序求值行目标及九个DuckDB 1.4.0正确性对照均通过。这次测量对应修复后的运行时，不代表产生了成熟研究结论。
+- 独立核验保存的源码/输入哈希、未改动的协议、参考聚合及全部试次计数，没有另外运行基准。六个零剪枝案例及耗时成本全部保留；200k打乱负载差异在所报精度下近乎持平。
+- 使用 `python -m segmentlens report results/layout-repair-20261013.json` 为两份README及两份实验文档生成相同新表。原始旧结果文件及旧表逐字节保留，明确区分两次测量提交。本地Markdown链接、双语新增命令块及表格与原始结果对应检查通过；本文档步骤未改运行时代码或协议。

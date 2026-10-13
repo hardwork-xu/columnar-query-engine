@@ -48,7 +48,29 @@ CLI help is bilingual. `query TABLE.npz QUERY.json --no-prune` selects full-scan
 
 ## Measured behavior
 
-Layout metadata (`segment_size`, `length`) is read-only; rebuild a `Table` to change segmentation. The 2026-10-13 correctness repair also prevents result-file replacement by concurrent writers or symlinks. The measurements below remain **historical results from the recorded source**, not measurements of this repair; see [the experiment boundary](docs/en/EXPERIMENTS.md).
+Layout metadata (`segment_size`, `length`) is read-only; rebuild a `Table` to change segmentation. The 2026-10-13 correctness repair also prevents result-file replacement by concurrent writers or symlinks. The new repair measurement and preserved historical measurement are separated below; see [the experiment boundary](docs/en/EXPERIMENTS.md).
+
+### Repair measurement — 2026-10-13
+
+Run `segmentlens-f0eea47a2116` measured clean source `00c50b3c9413f2894909bcf2d8fa9ff2863492f6` after the layout repair. Environment: macOS arm64 (Darwin 25.6.0), Python 3.12.2, NumPy 2.3.3, CPU; all three recorded BLAS thread variables were 1. The unchanged protocol used synthetic data at 10k/50k/200k rows, segment size 512, one warm-up per mode and three alternating B/C repeats. All 54 trials and all nine DuckDB 1.4.0 correctness comparisons passed. The >=80% row-work target passed at all three ordered selective scales. [New raw results](results/layout-repair-20261013.json) retain setup, save/load costs, every trial and source hashes.
+
+<!-- REPAIR_RESULTS_START -->
+| Rows / 行数 | Workload / 负载 | B ms | C ms | Fewer evaluated rows / 求值行减少 |
+|---:|---|---:|---:|---:|
+| 10000 | ordered_selective | 0.240 | 0.047 | 94.88% |
+| 10000 | shuffled_selective | 0.314 | 0.326 | 0.00% |
+| 10000 | ordered_all | 0.898 | 0.931 | 0.00% |
+| 50000 | ordered_selective | 1.141 | 0.155 | 97.95% |
+| 50000 | shuffled_selective | 1.578 | 1.736 | 0.00% |
+| 50000 | ordered_all | 4.813 | 5.035 | 0.00% |
+| 200000 | ordered_selective | 4.613 | 0.566 | 98.72% |
+| 200000 | shuffled_selective | 6.488 | 6.488 | 0.00% |
+| 200000 | ordered_all | 19.187 | 19.409 | 0.00% |
+<!-- REPAIR_RESULTS_END -->
+
+All six shuffled or broad-scan cases still prune zero rows. Shuffled C medians were 3.88%, 10.00% and 0.0045% higher than B at 10k/50k/200k; the last difference rounds to equal milliseconds and does not establish a meaningful slowdown. Broad-scan C medians were 3.71%, 4.59% and 1.16% higher. These are three-repeat descriptive results, not uncertainty estimates. This remains a bounded engineering reproduction: no DuckDB speed comparison or mature research claim follows, and differences between the two dated runs do not isolate the repair's performance effect.
+
+### Historical measurement — original implementation
 
 Run `segmentlens-bec82c0d6994`: Apple M1 Pro16GiB, Python3.12.2/NumPy2.3.3, CPU, single BLAS thread, synthetic data, segment512, one warm-up and three alternating paired repeats. Median query-only milliseconds below. Setup/load costs and every trial are in [raw results](results/benchmark.json). B/C outputs and native DuckDB1.4.0 correctness references agree. The predefined >=80% row-work reduction target passed at all ordered sizes.
 

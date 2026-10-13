@@ -16,4 +16,11 @@ The initial implementation entries below occurred on 2026-09-21, Asia/Shanghai. 
 - Reproduced the public `segment_size` reassignment failure: full scan returned count 2 / sum 201, while pruning returned no rows after a layout-only change. This was unsupported reconfiguration accepted silently, not an ordinary immutable-table query error.
 - Replaced writable `segment_size` / `length` with read-only properties backed by private fields. Added assignment/deletion rejection, query preservation, save/load and explicit-rebuild regressions.
 - Replaced the experiment runner’s final overwrite with exclusive creation, rejected dangling symlinks before work, and tested existing/racing destinations plus preservation of failed-run records.
-- `python -m pytest -q`: 52 passed, including 14 new cases. No tolerance was relaxed. No formal performance experiment was run; old raw data remains unchanged and explicitly historical.
+- `python -m pytest -q`: 52 passed, including 14 new cases. No tolerance was relaxed. No formal performance experiment had run at this initial repair checkpoint; old raw data remained unchanged and explicitly historical. The later same-day run is recorded below.
+
+
+## 2026-10-13 — repaired-source measurement
+
+- At clean commit `00c50b3c9413f2894909bcf2d8fa9ff2863492f6`, ran `OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 python -m segmentlens bench --output results/layout-repair-20261013.json --oracle-duckdb`. Run `segmentlens-f0eea47a2116` exited successfully: 9 cases / 54 trials, three ordered row-work targets and nine DuckDB 1.4.0 correctness comparisons passed. This measured repaired runtime source, not a claim of new research maturity.
+- Independently checked saved source/data hashes, unchanged protocol, reference aggregates and all trial counters without running another benchmark. All six zero-pruning cases and their timing costs are retained. The 200k shuffled timing difference is negligible at the reported precision.
+- Used `python -m segmentlens report results/layout-repair-20261013.json` to generate the same new table for both READMEs and both experiment documents. Kept the original raw file and table byte-for-byte; labels separate the two measurement commits. Local Markdown links, bilingual new command blocks and table-to-raw equality passed. No runtime code or protocol changed in this documentation step.
