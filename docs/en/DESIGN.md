@@ -2,6 +2,8 @@
 
 `Table(columns, segment_size=512)` owns copies of one-dimensional numeric/Unicode arrays. Numeric data uses finite float64; integers outside the exactly representable ±2^53 range are rejected. All columns have equal length and exposed views are read-only. Empty tables are valid. This protects ordinary accidental mutation, not hostile Python code manipulating private storage.
 
+`Table.segment_size` and `Table.length` are read-only properties. Assignment and deletion raise `AttributeError`, keeping query traversal aligned with the summaries built at construction. To change segmentation, construct a new `Table(dict(table.columns), segment_size=...)`; its summaries are rebuilt. Modifying private fields or underlying array bases is unsupported.
+
 `Predicate(column, op, value)` supports numeric `eq/lt/le/gt/ge/between/in`, and string `eq/in`. `between` is inclusive. `Query(measure, group_by, predicates=())` requests grouped count and sum; conditions combine with AND. `Query.from_dict` rejects unknown fields. `execute(table, query, prune=False)` selects B; `prune=True` selects C and is the default. `Result.rows` is a sorted list of key/count/sum objects; `Result.stats` explains total/skipped segments and evaluated/matching rows. Empty results are `[]`; sums that overflow are rejected.
 
 For each segment, C evaluates conservative metadata before allocating a Boolean mask. Numeric intervals may overlap even when no row matches; this only causes extra scanning. Categorical sets are stored only up to 256 distinct values; higher cardinality falls back to scanning. Selected row indexes then gather the measure and grouping columns. NumPy unique/bincount produces partial groups, merged by key into the result.

@@ -2,6 +2,8 @@
 
 Table(columns, segment_size=512)复制并拥有一维数值/Unicode列。数值使用有限float64，拒绝超出±2^53精确范围的整数。各列等长，只读视图防止普通误修改；允许空表。这不是防御恶意Python代码修改私有存储的安全边界。
 
+`Table.segment_size` 和 `Table.length` 是只读属性，赋值或删除会抛出 `AttributeError`，避免查询遍历与构建时的摘要布局不一致。改变分段须调用 `Table(dict(table.columns), segment_size=...)` 重新构造并重建摘要；不支持修改私有字段或数组底层存储。
+
 Predicate(column, op, value)支持数值eq/lt/le/gt/ge/between/in，字符串eq/in；between包含两端。Query(measure, group_by, predicates=())按条件交集筛选并执行分组count/sum。Query.from_dict拒绝未知字段。execute(table, query, prune=False)运行B，prune=True运行C（默认）。Result.rows是按key排序的key/count/sum列表；Result.stats记录段数、跳过段数、求值行和匹配行。无结果返回[]，sum溢出报错。
 
 C在分配布尔mask之前检查段摘要。数值范围可能重叠但无行命中，这只增加扫描，不会丢结果。字符串最多保存256个不同值，超限则完整扫描。选择向量按行索引收集度量与分组列；NumPy unique/bincount执行段内归约，Python字典合并段间结果。

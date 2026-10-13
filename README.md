@@ -48,6 +48,8 @@ CLI help is bilingual. `query TABLE.npz QUERY.json --no-prune` selects full-scan
 
 ## Measured behavior
 
+Layout metadata (`segment_size`, `length`) is read-only; rebuild a `Table` to change segmentation. The 2026-10-13 correctness repair also prevents result-file replacement by concurrent writers or symlinks. The measurements below remain **historical results from the recorded source**, not measurements of this repair; see [the experiment boundary](docs/en/EXPERIMENTS.md).
+
 Run `segmentlens-bec82c0d6994`: Apple M1 Pro16GiB, Python3.12.2/NumPy2.3.3, CPU, single BLAS thread, synthetic data, segment512, one warm-up and three alternating paired repeats. Median query-only milliseconds below. Setup/load costs and every trial are in [raw results](results/benchmark.json). B/C outputs and native DuckDB1.4.0 correctness references agree. The predefined >=80% row-work reduction target passed at all ordered sizes.
 
 <!-- RESULTS_START -->

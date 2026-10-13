@@ -72,8 +72,8 @@ class Table:
             a.flags.writeable = False
             owned[name] = a
         self._columns = owned
-        self.segment_size = segment_size
-        self.length = length
+        self._segment_size = segment_size
+        self._length = length
         # Summaries may over-admit, but must never reject a matching row.
         # 摘要可放过不匹配段，但绝不能拒绝真正匹配的行。
         self._summaries = []
@@ -87,6 +87,20 @@ class Table:
                     values = np.unique(part)
                     summary[name] = frozenset(values.tolist()) if len(values) <= 256 else None
             self._summaries.append(summary)
+
+    @property
+    def segment_size(self) -> int:
+        """Read-only layout size; rebuild the Table to change it.
+        只读分段大小；修改布局须重新构造 Table。
+        """
+        return self._segment_size
+
+    @property
+    def length(self) -> int:
+        """Read-only row count tied to owned columns and summaries.
+        只读行数，与自有列及分段摘要保持一致。
+        """
+        return self._length
 
     @property
     def columns(self):

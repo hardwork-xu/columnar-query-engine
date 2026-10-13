@@ -97,3 +97,42 @@ def test_corrupt_archive_headers(tmp_path, header):
     np.savez(path, __header__=header, x=[1.0])
     with pytest.raises(ValueError, match='归档'):
         Table.load(path)
+
+
+@pytest.mark.parametrize('attribute,value', [('segment_size', 4), ('length', 2)])
+@pytest.mark.parametrize('operation', ['assign', 'delete'])
+def test_layout_metadata_rejects_public_mutation(attribute, value, operation):
+    # Changing layout without rebuilding summaries used to discard matching rows.
+    # 只改布局而不重建摘要曾导致错误剪掉匹配行。
+    table = Table({'x': [0, 1, 100, 101], 'g': ['a'] * 4}, segment_size=2)
+    query = Query('x', 'g', (Predicate('x', 'ge', 100),))
+    expected = [{'key': 'a', 'count': 2, 'sum': 201.0}]
+    with pytest.raises(AttributeError):
+        if operation == 'assign':
+            setattr(table, attribute, value)
+        else:
+            delattr(table, attribute)
+    assert table.segment_size == 2 and table.length == 4
+    assert execute(table, query, prune=False).rows == expected
+    assert execute(table, query, prune=True).rows == expected
+
+
+@pytest.mark.parametrize('segment_size', [1, 2, 3, 8])
+def test_layout_metadata_roundtrip_and_explicit_rebuild(tmp_path, segment_size):
+    table = Table({'x': [0, 1, 100, 101], 'g': ['a'] * 4}, segment_size=segment_size)
+    query = Query('x', 'g', (Predicate('x', 'ge', 100),))
+    path = tmp_path / 'table.npz'
+    table.save(path)
+    loaded = Table.load(path)
+    assert loaded.segment_size == segment_size and loaded.length == 4
+    for attribute in ('segment_size', 'length'):
+        with pytest.raises(AttributeError):
+            setattr(loaded, attribute, 0)
+        with pytest.raises(AttributeError):
+            delattr(loaded, attribute)
+    rebuilt = Table(dict(loaded.columns), segment_size=5)
+    assert rebuilt.segment_size == 5 and loaded.segment_size == segment_size
+    expected = [{'key': 'a', 'count': 2, 'sum': 201.0}]
+    for version in (table, loaded, rebuilt):
+        assert execute(version, query, prune=False).rows == expected
+        assert execute(version, query, prune=True).rows == expected

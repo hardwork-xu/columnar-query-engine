@@ -48,6 +48,8 @@ CLI帮助为双语。`query TABLE.npz QUERY.json --no-prune`使用完整扫描B�
 
 ## 实测结果
 
+布局元数据（`segment_size`、`length`）只读，改变分段须重建 `Table`。2026-10-13 正确性修复同时阻止并发文件或符号链接导致实验结果被覆盖。下列数字仍是**所标注旧源码的历史结果**，不是本次修复后的测量；详见[实验边界](docs/zh/EXPERIMENTS.md)。
+
 运行`segmentlens-bec82c0d6994`：Apple M1 Pro16GiB、Python3.12.2/NumPy2.3.3、CPU单BLAS线程、合成数据、段512，一次预热、三次交替配对重复。表内为仅查询耗时的毫秒中位数；导入/加载成本与逐次结果见[原始JSON](results/benchmark.json)。B/C输出及原生DuckDB1.4.0正确性参考一致；预设各有序规模至少80%行工作量减少目标全部达到。
 
 <!-- RESULTS_START -->

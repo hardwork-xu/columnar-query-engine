@@ -39,7 +39,7 @@ def run_benchmark(output: str | Path, sizes=(10000, 50000, 200000), repeats=3, o
     if repeats < 1 or not sizes or any(not isinstance(n, int) or n < 100 for n in sizes):
         raise ValueError('invalid experiment sizes/repeats / 实验规模或重复次数无效')
     output = Path(output)
-    if output.exists():
+    if output.exists() or output.is_symlink():
         raise FileExistsError('refuse to overwrite experiment / 拒绝覆盖已有实验')
     raw = {'schema_version': 1, 'run_id': 'segmentlens-' + uuid.uuid4().hex[:12],
            'started_at': datetime.now(timezone.utc).isoformat(),
@@ -131,7 +131,11 @@ def run_benchmark(output: str | Path, sizes=(10000, 50000, 200000), repeats=3, o
             connection.close()
         raw['finished_at'] = datetime.now(timezone.utc).isoformat()
         output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_text(json.dumps(raw, indent=2, ensure_ascii=False, allow_nan=False) + '\n')
+        # Exclusive creation also rejects a writer/symlink arriving after preflight.
+        # 排他创建也拒绝预检查后出现的其他写入者或符号链接。
+        payload = json.dumps(raw, indent=2, ensure_ascii=False, allow_nan=False) + '\n'
+        with output.open('x', encoding='utf-8') as stream:
+            stream.write(payload)
     return raw
 
 
